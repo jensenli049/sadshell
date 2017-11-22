@@ -8,12 +8,17 @@ int main( int argc, char *argv[] ){
     //printf("input: %s", input);
     if( strcmp(input,"exit") )
       exit(0);
+
+    int f = fork();
+    if(!f){ //child
+      ParseCmd(input);
+    }
     
   }
   
 }
 /*
-void ParseCmd(){
+void ParseCmd(char[]){
   
 }
 
