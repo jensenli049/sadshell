@@ -6,14 +6,16 @@ int main( int argc, char *argv[] ){
     char input[200];// = (char*)malloc(200*sizeof(char));
     fgets(input, sizeof(input), stdin);
     //printf("input: %s", input);
-
+    if( strcmp(input,"exit") )
+      exit(0);
     
   }
   
 }
-
+/*
 void ParseCmd(){
   
 }
 
 void
+*/
