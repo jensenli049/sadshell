@@ -10,3 +10,5 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <sys/wait.h>
+
+char **parse_args( char *);
