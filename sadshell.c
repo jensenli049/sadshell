@@ -9,8 +9,8 @@ int main( int argc, char *argv[] ){
     printf("input: %s", input);
       
       
-      printf("Difference from 'exit': %d\n", strcmp(input,"exit"));
-      if( !(strcmp(input,"exit"))-10 ){
+      //printf("Difference from 'exit': %d\n", strcmp(input,"exit"));
+      if( !((strcmp(input,"exit"))-10) ){
           //printf("Difference from 'exit': %d\n", strcmp(input,"exit"));
           exit(0);
       }
@@ -19,11 +19,19 @@ int main( int argc, char *argv[] ){
         //printf("\nTesting %s:\n", input);
         char **args = parse_args( input );
         //printf("Parsed args\n");
+        
       int i = 0;
       while(args[i])
           printf("cmd[%d]: %s",i++, args[i]);
+        exit(0);
+        
+        execvp(".", args);
+        exit(0);
     }
+
   }
+    
+
   
 }
 
@@ -33,7 +41,7 @@ char **parse_args( char * line ){
     int i = 0;
     
     if(!strchr(line,' ')){
-        printf("There is no space!\n");
+        //printf("There is no space!\n");
         retval[0] = line;
         return retval;
     }
