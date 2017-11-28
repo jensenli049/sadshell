@@ -8,27 +8,24 @@ int main( int argc, char *argv[] ){
     fgets(input, sizeof(input), stdin);
     printf("input: %s", input);
       
-      
-      //printf("Difference from 'exit': %d\n", strcmp(input,"exit"));
-      if( !((strcmp(input,"exit"))-10) ){
-          //printf("Difference from 'exit': %d\n", strcmp(input,"exit"));
-          exit(0);
-      }
-    int f = fork();
-    if(!f){ //child
-        //printf("\nTesting %s:\n", input);
-        char **args = parse_args( input );
-        //printf("Parsed args\n");
+    if( !((strcmp(input,"exit"))-10) )
+      exit(0);
+
+    int status = fork();
+    if(!status){ //child
+      //printf("\nTesting %s:\n", input);
+      char **args = parse_args( input );
+      //printf("Parsed args\n");
         
       int i = 0;
-      while(args[i])
-          printf("cmd[%d]: %s",i++, args[i]);
-        exit(0);
+      //while(args[i])
+      //printf("cmd[%d]: %s",i++, args[i]);
         
-        execvp(".", args);
-        exit(0);
+      execvp(args[0], args);
+      exit(0);
     }
-
+    else
+      wait(&status);
   }
     
 
@@ -37,19 +34,15 @@ int main( int argc, char *argv[] ){
 
 
 char **parse_args( char * line ){
-    char **retval = malloc(50*sizeof(char*));
-    int i = 0;
+  char **retval = malloc(50*sizeof(char*));
+  int i = 0;
     
-    if(!strchr(line,' ')){
-        //printf("There is no space!\n");
-        retval[0] = line;
-        return retval;
-    }
-    while( line ){
-        //printf("%s\n", line);
-        retval[i++] = strsep( &line," " );
-        //printf("%s\n", retval[i-1]);
-    }
+  if(!strchr(line,' ')){
+    retval[0] = line;
     return retval;
+  }
+  while( line )
+    retval[i++] = strsep( &line," " );
+  return retval;
 }
 
