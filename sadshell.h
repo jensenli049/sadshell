@@ -11,4 +11,5 @@
 #include <signal.h>
 #include <sys/wait.h>
 
+char ** fix_semicolons(char * line );
 char **parse_args( char *);
