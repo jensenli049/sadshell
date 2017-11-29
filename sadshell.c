@@ -1,19 +1,19 @@
 #include "sadshell.h"
 
 int main( int argc, char *argv[] ){
+
+  /*
+  char *argv2[2];
+  argv2[0] = "ls";
+  //argv2[1] = "-l";
+  argv2[1] = NULL;
     
-    
-    char *argv2[3];
-    argv2[0] = "ls";
-    argv2[1] = "-l";
-    argv2[2] = NULL;
-    
-    execvp(argv2[0], argv2);
-    
+  execvp(argv2[0], argv2);
+  */
      
   while(1){
     printf("$ad$hell$ ");
-    char input[100];// = (char*)malloc(200*sizeof(char));
+    char input[100];
     fgets(input, sizeof(input), stdin);
     printf("input: %s\n", input);
       
@@ -22,20 +22,16 @@ int main( int argc, char *argv[] ){
 
     int status = fork();
     if(!status){ //child
-      //printf("\nTesting %s:\n", input);
+      printf("\nTesting %s:\n", input);
       char **args = parse_args( input );
-      //printf("Parsed args\n");
-        
       int i = 0;
-        while(args[i]){
-          printf("cmd[%d]: %s\n",i, args[i]);
-            i++;
-        }
-        
+      while(args[i]){
+	printf("cmd[%d]: %s\n",i, args[i]);
+	i++;
+      }
       execvp(args[0], args);
         
-        
-        //printf("child exiting\n");
+      //printf("child exiting\n");
       exit(0);
     }
     else
@@ -55,11 +51,11 @@ char **parse_args( char * line ){
     retval[0] = line;
     return retval;
   }
-    while( line ){
-        retval[i] = strsep( &line," " );
-        i++;
-    }
-    retval[i] = NULL;
+  while( line ){
+    retval[i] = strsep( &line," " );
+    i++;
+  }
+  retval[i] = NULL;
   return retval;
 }
 

@@ -2,11 +2,11 @@ echo START
 ls
 exit
 
-
+history | grep sadshell
 ls -a -l
 cd ..
 ps
-history | grep sadshell
+
 pwd ; echo HELLO...................
 exit
 
