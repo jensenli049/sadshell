@@ -1,8 +1,12 @@
 echo START
 ls
+exit
+
+
 ls -a -l
 cd ..
 ps
 history | grep sadshell
 pwd ; echo HELLO...................
 exit
+

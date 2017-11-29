@@ -2,11 +2,20 @@
 
 int main( int argc, char *argv[] ){
     
+    
+    char *argv2[3];
+    argv2[0] = "ls";
+    argv2[1] = "-l";
+    argv2[2] = NULL;
+    
+    execvp(argv2[0], argv2);
+    
+     
   while(1){
     printf("$ad$hell$ ");
     char input[100];// = (char*)malloc(200*sizeof(char));
     fgets(input, sizeof(input), stdin);
-    printf("input: %s", input);
+    printf("input: %s\n", input);
       
     if( !((strcmp(input,"exit"))-10) )
       exit(0);
@@ -18,10 +27,15 @@ int main( int argc, char *argv[] ){
       //printf("Parsed args\n");
         
       int i = 0;
-      //while(args[i])
-      //printf("cmd[%d]: %s",i++, args[i]);
+        while(args[i]){
+          printf("cmd[%d]: %s\n",i, args[i]);
+            i++;
+        }
         
       execvp(args[0], args);
+        
+        
+        //printf("child exiting\n");
       exit(0);
     }
     else
@@ -41,8 +55,11 @@ char **parse_args( char * line ){
     retval[0] = line;
     return retval;
   }
-  while( line )
-    retval[i++] = strsep( &line," " );
+    while( line ){
+        retval[i] = strsep( &line," " );
+        i++;
+    }
+    retval[i] = NULL;
   return retval;
 }
 
