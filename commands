@@ -4,6 +4,6 @@ ls | wc
 ls -a -l
 cd ..
 ps
-pwd ; echo HELLO...................
+pwd;echo HELLO...................
 exit
 

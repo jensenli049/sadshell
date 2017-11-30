@@ -68,7 +68,7 @@ char **parse_args( char * line ){
     return retval;
   }
   while( line ){
-    retval[i] = strsep( &line," " );
+      retval[i] = strsep( &line," " );
     i++;
   }
   retval[i] = NULL;
