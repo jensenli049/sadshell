@@ -16,29 +16,30 @@ int main( int argc, char *argv[] ){
     if( !((strcmp(input,"exit"))-10) )
       exit(0);
 
-    int status = fork();
-    if(!status){ //child
-      //printf("\nTesting %s", input);
-      int i = 0;
       char ** cmds = fix_semicolons( input );
-        
+    /*
         while(cmds[i]){
             printf("cmd[%d]: %s\n",i, cmds[i]);
             i++;
         }
-        
-      char ** args = malloc(100*sizeof(char*));
+        */
+      int i = 0;
+      
       while(cmds[i]){
-          args = parse_args(cmds[i]);
-          int b = 0;
-          execvp(args[0], args);
+          int status = fork();
+          if(!status){ //child
+              //printf("\nTesting %s", input);
+              
+              char ** args = malloc(100*sizeof(char*));
+              args = parse_args(cmds[i]);
+              execvp(args[0], args);
+      
+              exit(0);
+          }
+          else
+              wait(&status);
           i++;
       }
-      
-      exit(0);
-    }
-    else
-      wait(&status);
   }
 }
 
