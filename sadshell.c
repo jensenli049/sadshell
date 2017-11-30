@@ -21,18 +21,20 @@ int main( int argc, char *argv[] ){
       //printf("\nTesting %s", input);
       int i = 0;
       char ** cmds = fix_semicolons( input );
+        
+        while(cmds[i]){
+            printf("cmd[%d]: %s\n",i, cmds[i]);
+            i++;
+        }
+        
       char ** args = malloc(100*sizeof(char*));
       while(cmds[i]){
-	args = parse_args(cmds[i]);
-	execvp(args[0], args);
-	i++;
+          args = parse_args(cmds[i]);
+          int b = 0;
+          execvp(args[0], args);
+          i++;
       }
-      /*
-      while(args[i]){
-	printf("cmd[%d]: %s\n",i, args[i]);
-	i++;
-      }
-      */
+      
       exit(0);
     }
     else
