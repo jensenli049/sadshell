@@ -29,12 +29,13 @@ int main( int argc, char *argv[] ){
     while(cmds[i]){
       char ** args = malloc(100*sizeof(char*));
       args = parse_args(cmds[i]);
-      if( !((strcmp(cmds[0],"cd"))) ){
-	  int q = chdir(cmds[1]);
-	  printf("cmds[0]: %s\ncmds[1]: %s\nerror: %s--------------------\n",cmds[0], cmds[1],strerror(errno));
-	  i++;
-	  continue;
+      
+      if( !((strcmp(args[0],"cd"))) ){
+	int q = chdir(args[1]);
+	i++;
+	continue;
       }
+      
       int status = fork();
       if(!status){ //child
 	//printf("\nTesting %s", input);
