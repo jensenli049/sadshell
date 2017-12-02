@@ -2,9 +2,9 @@
 
 int main( int argc, char *argv[] ){
   /*
-  char tmp[100] = "ls -a -l\n";
-  char **argv2 = parse_args(tmp);/
-  execvp(argv2[0], argv2);
+    char tmp[100] = "ls -a -l\n";
+    char **argv2 = parse_args(tmp);/
+    execvp(argv2[0], argv2);
   */
      
   while(1){
@@ -16,31 +16,45 @@ int main( int argc, char *argv[] ){
     if( !((strcmp(input,"exit"))-10) )
       exit(0);
 
-      char ** cmds = fix_semicolons( input );
+    char ** cmds = fix_semicolons( input );
+    int i = 0;
     /*
-        while(cmds[i]){
-            printf("cmd[%d]: %s\n",i, cmds[i]);
-            i++;
-        }
-        */
-      int i = 0;
-      
-      while(cmds[i]){
-          int status = fork();
-          if(!status){ //child
-              //printf("\nTesting %s", input);
+    while(cmds[i]){
+      printf("cmd[%d]: %s\n",i, cmds[i]);
+      i++;
+    }
+    */
+    while(cmds[i]){
+      int status = fork();
+      if(!status){ //child
+	//printf("\nTesting %s", input);
               
-              char ** args = malloc(100*sizeof(char*));
-              args = parse_args(cmds[i]);
-              execvp(args[0], args);
+	char ** args = malloc(100*sizeof(char*));
+	args = parse_args(cmds[i]);
+	execvp(args[0], args);
       
-              exit(0);
-          }
-          else
-              wait(&status);
-          i++;
+	exit(0);
       }
+      else
+	wait(&status);
+      i++;
+    }
   }
+}
+
+char * strip(char * line){
+  char * temp = (char*)malloc(sizeof(line));
+  if( (strncmp(line, " ", 1) == 0))
+    strncpy(temp, line + 1, strlen(line) - 1);
+  else if((strncmp(line + strlen(line)-1, " ", 1) == 0))
+    strncpy(temp, line, strlen(line) - 1);
+  else{
+    int i = 0;
+    while (*line)
+      *(temp + (i++)) = *(line++);
+    return temp;
+  }
+  strcpy(temp,strip(temp));
 }
 
 char ** fix_semicolons(char * line ){
@@ -52,7 +66,7 @@ char ** fix_semicolons(char * line ){
     return retval;
   }
   while( line ){
-    retval[i] = strsep( &line,";" );
+    retval[i] = strip(strsep( &line,";" ));
     i++;
   }
   retval[i] = NULL;
@@ -68,7 +82,7 @@ char **parse_args( char * line ){
     return retval;
   }
   while( line ){
-      retval[i] = strsep( &line," " );
+    retval[i] = strsep( &line," " );
     i++;
   }
   retval[i] = NULL;

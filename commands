@@ -1,9 +1,9 @@
 echo START
 ls
 ls | wc
-ls -a -l
+pwd
 cd ..
 ps
-pwd;echo HELLO...................
+ls -a -l ; echo HELLO...................
 exit
 
