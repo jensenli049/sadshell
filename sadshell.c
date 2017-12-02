@@ -12,31 +12,39 @@ int main( int argc, char *argv[] ){
     char input[100];
     fgets(input, sizeof(input), stdin);
     printf("%s", input);
-      
+
     if( !((strcmp(input,"exit"))-10) )
       exit(0);
-
+      
     char ** cmds = fix_semicolons( input );
     int i = 0;
+    if( !((strcmp(input,"exit"))-10) )
+      exit(0);
     /*
-    while(cmds[i]){
+      while(cmds[i]){
       printf("cmd[%d]: %s\n",i, cmds[i]);
       i++;
-    }
+      }
     */
     while(cmds[i]){
+      char ** args = malloc(100*sizeof(char*));
+      args = parse_args(cmds[i]);
+      if( !((strcmp(cmds[0],"cd"))) ){
+	  int q = chdir(cmds[1]);
+	  printf("cmds[0]: %s\ncmds[1]: %s\nerror: %s--------------------\n",cmds[0], cmds[1],strerror(errno));
+	  i++;
+	  continue;
+      }
       int status = fork();
       if(!status){ //child
 	//printf("\nTesting %s", input);
-              
-	char ** args = malloc(100*sizeof(char*));
-	args = parse_args(cmds[i]);
 	execvp(args[0], args);
-      
+	
 	exit(0);
       }
-      else
+      else{
 	wait(&status);
+      }
       i++;
     }
   }

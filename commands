@@ -2,8 +2,7 @@ echo START
 ls
 ls | wc
 pwd
-cd ..
 ps
+cd ..
 ls -a -l ; echo HELLO...................
 exit
-
