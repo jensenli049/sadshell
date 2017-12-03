@@ -6,16 +6,21 @@ int main( int argc, char *argv[] ){
     char **argv2 = parse_args(tmp);/
     execvp(argv2[0], argv2);
   */
-     
+    
+    // if input is not 'exit', continue running
   while(1){
     printf("$ad$hell$ ");
-    char input[100];
+    char input[256];
+      
+      //waits for input
     fgets(input, sizeof(input), stdin);
     printf("%s", input);
 
+      //exits shell
     if( !((strcmp(input,"exit"))-10) )
       exit(0);
       
+      //separates comands by ';'
     char ** cmds = fix_semicolons( input );
     int i = 0;
     if( !((strcmp(input,"exit"))-10) )
@@ -26,14 +31,17 @@ int main( int argc, char *argv[] ){
       i++;
       }
     */
+      
+      //separate the args into a 2d array
     while(cmds[i]){
-      char ** args = malloc(100*sizeof(char*));
+      char ** args = malloc(256*sizeof(char*));
       args = parse_args(cmds[i]);
       
+        //cd command
       if( !((strcmp(args[0],"cd"))) ){
-	int q = chdir(args[1]);
-	i++;
-	continue;
+          int q = chdir(args[1]);
+          i++;
+          continue;
       }
       
       int status = fork();
@@ -51,6 +59,8 @@ int main( int argc, char *argv[] ){
   }
 }
 
+
+// gets rid of all unnecessary spaces (extra spaces before and after the command and semicolons)
 char * strip(char * line){
   char * temp = (char*)malloc(sizeof(line));
   if( (strncmp(line, " ", 1) == 0))
@@ -64,10 +74,13 @@ char * strip(char * line){
     return temp;
   }
   strcpy(temp,strip(temp));
+    return temp;
 }
 
+
+// separates the commands by semicolons. Takes in the string read from input, and returns a 2d array with a separate command in each index.
 char ** fix_semicolons(char * line ){
-  char **retval = malloc(50*sizeof(char*));
+  char **retval = malloc(256*sizeof(char*));
   int i = 0;
   line = strsep(&line, "\n");
   if(!strchr(line,';')){
@@ -82,8 +95,10 @@ char ** fix_semicolons(char * line ){
   return retval;
 }
 
+
+// separates the arguments by spaces. Takes in the string containing the entire command, and returns a 2d array with separate arguments in each index.
 char **parse_args( char * line ){
-  char **retval = malloc(50*sizeof(char*));
+  char **retval = malloc(256*sizeof(char*));
   int i = 0;
   line = strsep(&line, "\n");
   if(!strchr(line,' ')){

@@ -4,5 +4,5 @@ ls | wc
 pwd
 ps
 cd ..
-ls -a -l ; echo HELLO...................
+ls -a -l ; echo HELLO
 exit
