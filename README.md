@@ -7,6 +7,9 @@ By: Rihui Zheng and Jensen Li
 - cd command (changes working directory)
 - exit (exits program)
 
+## Attempted:
+- We attempted to get pipe to work, but for some reason it doesn't. It is left in the code, and the part where it calls the pipe function is left commented out.
+
 ## Known Bugs:
 - With the semicolon, your command can not be super long (like no echo hjfbvkubvkbfwgwgreg ; echo nfjkrebgkebgkwjgwkg)
 
