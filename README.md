@@ -12,21 +12,22 @@ By: Rihui Zheng and Jensen Li
 
 ## Files and Functions:
 sadshell.c
-================char * strip()=================
+
+    ================char * strip()=================
     Inputs:
         char * line
     Returns:
             New string with unnecessary spaces removed
     Gets rid of all unnecessary spaces (extra spaces before and after the command and semicolons) in the string line.
         
-================char ** fix_semicolons()=================
+    ================char ** fix_semicolons()=================
     Inputs:
         char * line
     Returns:
         A 2-D array of chars where each index contains a command
     If line has a semicolon, it separates the commands by semicolons. Takes in the string read from input, and returns a 2d array with a separate command in each index.
 
-================char ** parse_args()=================
+    ================char ** parse_args()=================
     Inputs:
         char * line
     Returns:
