@@ -60,7 +60,14 @@ int main( int argc, char *argv[] ){
 }
 
 
-// gets rid of all unnecessary spaces (extra spaces before and after the command and semicolons)
+/* ================char * strip()=================
+ Inputs:
+    char * line
+ Returns:
+    New string with unnecessary spaces removed
+ 
+    Gets rid of all unnecessary spaces (extra spaces before and after the command and semicolons) in the string line.
+ */
 char * strip(char * line){
   char * temp = (char*)malloc(sizeof(line));
   if( (strncmp(line, " ", 1) == 0))
@@ -77,8 +84,14 @@ char * strip(char * line){
     return temp;
 }
 
+/* ================char ** fix_semicolons()=================
+ Inputs:
+    char * line
+ Returns:
+    A 2-D array of chars where each index contains a command
 
-// separates the commands by semicolons. Takes in the string read from input, and returns a 2d array with a separate command in each index.
+    If line has a semicolon, it separates the commands by semicolons. Takes in the string read from input, and returns a 2d array with a separate command in each index.
+ */
 char ** fix_semicolons(char * line ){
   char **retval = malloc(256*sizeof(char*));
   int i = 0;
@@ -95,8 +108,14 @@ char ** fix_semicolons(char * line ){
   return retval;
 }
 
-
-// separates the arguments by spaces. Takes in the string containing the entire command, and returns a 2d array with separate arguments in each index.
+/* ================char ** parse_args()=================
+ Inputs:
+    char * line
+ Returns:
+    A 2-D array where each index contains  separate argument
+ 
+    This function takes in the string containing the entire command, separates the arguments by spaces, and returns a 2d array with separate arguments in each index.
+ */
 char **parse_args( char * line ){
   char **retval = malloc(256*sizeof(char*));
   int i = 0;
