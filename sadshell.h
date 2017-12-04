@@ -14,4 +14,4 @@
 char * strip(char * line);
 char ** fix_char(char * line, char *special );
 char **parse_args( char *);
-void piping( char * line );
+void piping( char * cmd1, char * cmd2 );

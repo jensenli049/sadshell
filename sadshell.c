@@ -1,4 +1,4 @@
-#include "sadshell.h"
+n#include "sadshell.h"
 
 int main( int argc, char *argv[] ){
   /*
@@ -30,24 +30,13 @@ int main( int argc, char *argv[] ){
       printf("cmd[%d]: %s\n",i, cmds[i]);
       i++;
       }
-     */
+    */
+      
     //separate the args into a 2d array
     while(cmds[i]){
-        //printf("command: %s\n", cmds[i]);
-        
-            
-             /* Piping: doesn't work for some reason
-            if( !(strcmp(cmds[1],"|")) ){
-             int status = fork();
-             if (!status)
-                piping(cmds[i]);
-            }*/
-        
-            
       char ** args = malloc(256*sizeof(char*));
-      args = parse_args(cmds[i]);
-
-            
+      args = parse_args(strip(cmds[i]));
+      
       //cd command
       if( !((strcmp(args[0],"cd"))) ){
 	if(args[1])
@@ -57,13 +46,16 @@ int main( int argc, char *argv[] ){
 	i++;
 	continue;
       }
-      
-        
+            
       int status = fork();
       if(!status){ //child
 	//printf("\nTesting %s", input);
-	execvp(args[0], args);
 	
+	//if( strstr(args[1], "|") && args[2])
+	//piping(args[0], args[2]);
+	
+	execvp(args[0], args);
+
 	exit(0);
       }
       else{
@@ -148,38 +140,27 @@ char **parse_args( char * line ){
   return retval;
 }
 
-
 /* ================void piping()=================
- Inputs:
-    char * line
- Returns:
-    none
+   Inputs:
+   char * cmd1
+   char * cmd2
+   Returns:
+   none
  
- This function takes in the string containing a pipe command, separates the arguments by the pipe, and takes the outputs of the first command as the inputs for the second command.
- */
-void piping ( char * line ){
-    char **commands = malloc(256*sizeof(char*));
-    int i = 0;
-    line = strsep(&line, "\n");
-    while( line ){
-        commands[i] = strip(strsep( &line,"|" ));
-        i++;
-    }
-    commands[i] = NULL;
-    
-    FILE *p = popen(commands[0], "r");
-    if (p == NULL){
-        printf("popen hast failed");
-        exit(0);
-    }
-    
-    int stdin = dup(STDIN_FILENO);
-    int redir = dup2(fileno(p), STDIN_FILENO);
-    
-    char **newcmd = parse_args(strip(commands[1]));
-    execvp(newcmd[0], newcmd);
-    
-    dup2(stdin, redir);
-    pclose(p);
+   This function takes in the string containing first pipe command and second pipe command. It takes the outputs of the first command as the inputs for the second command.
+*/
+void piping( char * cmd1, char * cmd2){
+  int newfd, oldfd, tmpfd;
 
+  //printf("cmd1: %s\ncmd2: %s\n", cmd1, cmd2);
+  FILE * file = popen(cmd1,"r");
+  tmpfd = dup(STDIN_FILENO);
+  oldfd = dup2(fileno(file), STDIN_FILENO);
+  char ** newcmd = malloc(256*sizeof(char*));
+  newcmd = parse_args(cmd2);
+  execvp(newcmd[0],newcmd);
+  dup2(tmpfd,oldfd);
+  pclose(file);
+  free(newcmd);
 }
+   
