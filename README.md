@@ -36,6 +36,14 @@ sadshell.c
         A 2-D array where each index contains  separate argument
     This function takes in the string containing the entire command, separates the arguments by spaces, and returns a 2d array with separate arguments in each index.
 
+    ================void piping()=================
+    Inputs:
+        char * line
+    Returns:
+        none
+
+    This function takes in the string containing a pipe command, separates the arguments by the pipe, and takes the outputs of the first command as the inputs for the second command.
+
 
 
 

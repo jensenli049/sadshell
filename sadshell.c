@@ -30,16 +30,24 @@ int main( int argc, char *argv[] ){
       printf("cmd[%d]: %s\n",i, cmds[i]);
       i++;
       }
-    */
-      
+     */
     //separate the args into a 2d array
     while(cmds[i]){
-      if( pipe_chr(cmds[i]) ){
-	piping(cmds[i], pipe_chr(cmds[i]));
-      }
+        //printf("command: %s\n", cmds[i]);
+        
+            
+             /* Piping: doesn't work for some reason
+            if( !(strcmp(cmds[1],"|")) ){
+             int status = fork();
+             if (!status)
+                piping(cmds[i]);
+            }*/
+        
+            
       char ** args = malloc(256*sizeof(char*));
       args = parse_args(cmds[i]);
-      
+
+            
       //cd command
       if( !((strcmp(args[0],"cd"))) ){
 	if(args[1])
@@ -50,6 +58,7 @@ int main( int argc, char *argv[] ){
 	continue;
       }
       
+        
       int status = fork();
       if(!status){ //child
 	//printf("\nTesting %s", input);
@@ -139,27 +148,38 @@ char **parse_args( char * line ){
   return retval;
 }
 
-int pipe_chr( char * chr ){
-  //if(strstr(chr, ">>")) return 0;
-  //if(strstr(chr, "<<")) return 0;
-  if(strstr(chr, "<"))
-    return 1;
-  if(strstr(chr, ">"))
-    return 2;
-  if(strstr(chr, "|"))
-    return 3;
-  return 0;
-}
 
-void piping( char * line, int schr ){
-  int newfd, oldfd, tmpfd;
-  char **args = malloc(256*sizeof(char*));
-  if(schr == 1){
-    args = fix_char(line,"<");
-    newfd = open(args[0], O_CREAT | O_RDONLY);
-    tmpfd = dup(STDIN_FILENO);
-    oldfd = dup2(newfd, STDIN_FILENO);
+/* ================void piping()=================
+ Inputs:
+    char * line
+ Returns:
+    none
+ 
+ This function takes in the string containing a pipe command, separates the arguments by the pipe, and takes the outputs of the first command as the inputs for the second command.
+ */
+void piping ( char * line ){
+    char **commands = malloc(256*sizeof(char*));
+    int i = 0;
+    line = strsep(&line, "\n");
+    while( line ){
+        commands[i] = strip(strsep( &line,"|" ));
+        i++;
+    }
+    commands[i] = NULL;
     
-  };
+    FILE *p = popen(commands[0], "r");
+    if (p == NULL){
+        printf("popen hast failed");
+        exit(0);
+    }
     
+    int stdin = dup(STDIN_FILENO);
+    int redir = dup2(fileno(p), STDIN_FILENO);
+    
+    char **newcmd = parse_args(strip(commands[1]));
+    execvp(newcmd[0], newcmd);
+    
+    dup2(stdin, redir);
+    pclose(p);
+
 }
