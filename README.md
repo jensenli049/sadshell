@@ -15,12 +15,14 @@ sadshell.c
 
     ================char * strip()=================
     Inputs:
-        char * line
+	char * line
+   	char special
     Returns:
-            New string with unnecessary spaces removed
-    Gets rid of all unnecessary spaces (extra spaces before and after the command and semicolons) in the string line.
+	A 2-D array of chars where each index contains a command
+
+    If line has a given special character, it separates the commands by tthat character. Takes in the string read from input, and returns a 2d array with a separate command in each index.
         
-    ================char ** fix_semicolons()=================
+    ================char ** fix_char()=================
     Inputs:
         char * line
     Returns:

@@ -12,5 +12,7 @@
 #include <sys/wait.h>
 
 char * strip(char * line);
-char ** fix_semicolons(char * line );
+char ** fix_char(char * line, char *special );
 char **parse_args( char *);
+int pipe_chr( char * chr );
+void piping( char * line, int schr );

@@ -7,21 +7,21 @@ int main( int argc, char *argv[] ){
     execvp(argv2[0], argv2);
   */
     
-    // if input is not 'exit', continue running
+  // if input is not 'exit', continue running
   while(1){
     printf("$ad$hell$ ");
     char input[256];
       
-      //waits for input
+    //waits for input
     fgets(input, sizeof(input), stdin);
     printf("%s", input);
 
-      //exits shell
+    //exits shell
     if( !((strcmp(input,"exit"))-10) )
       exit(0);
       
-      //separates comands by ';'
-    char ** cmds = fix_semicolons( input );
+    //separates comands by ';'
+    char ** cmds = fix_char( input,";" );
     int i = 0;
     if( !((strcmp(input,"exit"))-10) )
       exit(0);
@@ -32,16 +32,22 @@ int main( int argc, char *argv[] ){
       }
     */
       
-      //separate the args into a 2d array
+    //separate the args into a 2d array
     while(cmds[i]){
+      if( pipe_chr(cmds[i]) ){
+	piping(cmds[i], pipe_chr(cmds[i]));
+      }
       char ** args = malloc(256*sizeof(char*));
       args = parse_args(cmds[i]);
       
-        //cd command
+      //cd command
       if( !((strcmp(args[0],"cd"))) ){
-          int q = chdir(args[1]);
-          i++;
-          continue;
+	if(args[1])
+	  chdir(args[1]);
+	else //if only cd then go to home dir
+	  chdir(getenv("HOME"));
+	i++;
+	continue;
       }
       
       int status = fork();
@@ -61,13 +67,13 @@ int main( int argc, char *argv[] ){
 
 
 /* ================char * strip()=================
- Inputs:
-    char * line
- Returns:
-    New string with unnecessary spaces removed
+   Inputs:
+   char * line
+   Returns:
+   New string with unnecessary spaces removed
  
-    Gets rid of all unnecessary spaces (extra spaces before and after the command and semicolons) in the string line.
- */
+   Gets rid of all unnecessary spaces (extra spaces before and after the command and semicolons) in the string line.
+*/
 char * strip(char * line){
   char * temp = (char*)malloc(sizeof(line));
   if( (strncmp(line, " ", 1) == 0))
@@ -81,27 +87,28 @@ char * strip(char * line){
     return temp;
   }
   strcpy(temp,strip(temp));
-    return temp;
+  return temp;
 }
 
-/* ================char ** fix_semicolons()=================
- Inputs:
-    char * line
- Returns:
-    A 2-D array of chars where each index contains a command
+/* ================char ** fix_char()=================
+   Inputs:
+   char * line
+   char special
+   Returns:
+   A 2-D array of chars where each index contains a command
 
-    If line has a semicolon, it separates the commands by semicolons. Takes in the string read from input, and returns a 2d array with a separate command in each index.
- */
-char ** fix_semicolons(char * line ){
+   If line has a given special character, it separates the commands by tthat character. Takes in the string read from input, and returns a 2d array with a separate command in each index.
+*/
+char ** fix_char(char * line, char * special ){
   char **retval = malloc(256*sizeof(char*));
   int i = 0;
   line = strsep(&line, "\n");
-  if(!strchr(line,';')){
+  if(!strstr(line,special)){
     retval[0] = line;
     return retval;
   }
   while( line ){
-    retval[i] = strip(strsep( &line,";" ));
+    retval[i] = strip(strsep( &line, special ));
     i++;
   }
   retval[i] = NULL;
@@ -109,13 +116,13 @@ char ** fix_semicolons(char * line ){
 }
 
 /* ================char ** parse_args()=================
- Inputs:
-    char * line
- Returns:
-    A 2-D array where each index contains  separate argument
+   Inputs:
+   char * line
+   Returns:
+   A 2-D array where each index contains  separate argument
  
-    This function takes in the string containing the entire command, separates the arguments by spaces, and returns a 2d array with separate arguments in each index.
- */
+   This function takes in the string containing the entire command, separates the arguments by spaces, and returns a 2d array with separate arguments in each index.
+*/
 char **parse_args( char * line ){
   char **retval = malloc(256*sizeof(char*));
   int i = 0;
@@ -132,3 +139,27 @@ char **parse_args( char * line ){
   return retval;
 }
 
+int pipe_chr( char * chr ){
+  //if(strstr(chr, ">>")) return 0;
+  //if(strstr(chr, "<<")) return 0;
+  if(strstr(chr, "<"))
+    return 1;
+  if(strstr(chr, ">"))
+    return 2;
+  if(strstr(chr, "|"))
+    return 3;
+  return 0;
+}
+
+void piping( char * line, int schr ){
+  int newfd, oldfd, tmpfd;
+  char **args = malloc(256*sizeof(char*));
+  if(schr == 1){
+    args = fix_char(line,"<");
+    newfd = open(args[0], O_CREAT | O_RDONLY);
+    tmpfd = dup(STDIN_FILENO);
+    oldfd = dup2(newfd, STDIN_FILENO);
+    
+  };
+    
+}
